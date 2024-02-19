@@ -2,9 +2,7 @@ from pymongo import MongoClient
 import os
 
 client = MongoClient(os.environ.get("DB"))
-db = client.list_database_names()
 news_db = client.db
-collections = news_db.list_collection_names()
 
 def insert_mary_data(data):
     news_db["news"].insert_many(data)

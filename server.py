@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from dotenv import load_dotenv
-import database.news as newsdb
+from database.news import find_all_data
 import os
 
 load_dotenv()
@@ -12,7 +12,7 @@ CORS(app, resources={r'/.*': {'origins':f'{os.environ.get("URL")}'}})
 
 @app.route('/news')
 def news():
-    return newsdb.find_all_data()
+    return find_all_data()
 
 if __name__ == '__main__':
     app.run(debug=True)
