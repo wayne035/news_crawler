@@ -2,4 +2,4 @@
 .env
 .vercel
 
-/news_crawler/*.py
+/crawler/**
