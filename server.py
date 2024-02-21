@@ -9,13 +9,12 @@ import os
 load_dotenv()
 app = Flask(__name__)
 app.json.ensure_ascii = False
-CORS(app, resources={r'/.*': {'origins':f'{os.environ.get("URL")}'}})
-
 limiter = Limiter(
     get_remote_address,
     app=app,
     default_limits=["1/second"],
 )
+CORS(app, resources={r'/.*': {'origins':f'{os.environ.get("URL")}'}})
 
 @app.route('/news/<int:page>')
 def news(page):
