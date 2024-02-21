@@ -12,8 +12,8 @@ def delete_document():
     news_db["news"].delete_many({})
     print('資料已全部刪除')
 
-def find_all_data():
-    find_data = news_db["news"].find()
+def find_all_data(page):
+    find_data = news_db["news"].find().skip(page * 50).limit(50)
     data= []
     for api in find_data:
         api['_id'] = str(api['_id'])
