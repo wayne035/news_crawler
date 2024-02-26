@@ -1,28 +1,30 @@
-from flask import Flask
-from flask_cors import CORS
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from database.news import find_all_data, find_other_data
-import os
+import uvicorn,os
 
 load_dotenv()
-app = Flask(__name__)
-app.json.ensure_ascii = False
-limiter = Limiter(
-    get_remote_address,
-    app=app,
-    default_limits=["300/day"],
+app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[f'{os.environ.get("URL")}'],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
-CORS(app, resources={r'/.*': {'origins':f'{os.environ.get("URL")}'}})
 
-@app.route('/news/<news_name>')
-def other_news(news_name):
-    return find_other_data(news_name)
+@app.get('/')
+def root():
+    return "Hi 歡迎來到 newBug"
 
-@app.route('/news/<int:page>')
-def news(page):
+@app.get('/all_news/{page}')
+async def news(page: int):
     return find_all_data(page)
 
+@app.get('/news/{news_name}')
+async def other_news(news_name: str):
+    return find_other_data(news_name)
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    uvicorn.run("server:app", reload= True)
