@@ -5,20 +5,12 @@ client = MongoClient(os.environ.get("DB"))
 news_db = client.db
 
 def find_all_data(page):
-    find_data = news_db["news"].find().skip(page * 50).limit(50)
-    data= []
-    for api in find_data:
-        api['_id'] = str(api['_id'])
-        data.append(api)
-    return list(data)
+    find_data = news_db["news"].find({},{"_id": False}).skip(page * 50).limit(50)
+    return list(find_data)
 
 def find_other_data(news_name):
-    find_data = news_db["news"].find({'en':news_name})
-    data= []
-    for api in find_data:
-        api['_id'] = str(api['_id'])
-        data.append(api)
-    return list(data)
+    find_data = news_db["news"].find({'en':news_name},{"_id": False})
+    return list(find_data)
 
 def insert_mary_data(data):
     news_db["news"].insert_many(data)
